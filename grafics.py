@@ -19,8 +19,11 @@ df = carregar_dados(dataset)
 map_burnout = {'Low': 1, 'Medium': 2, 'High': 3}
 df['Burnout_Level_Num'] = df['Burnout_Level'].map(map_burnout)
 
+df['Mental_Health_Status_Num'] = df['Mental_Health_Status'].notna().astype(int)
+
 cols_cluster = ['Age', 'Hours_Per_Week', 'Work_Life_Balance_Score', 
-                'Social_Isolation_Score', 'Burnout_Level_Num']
+                'Social_Isolation_Score', 'Burnout_Level_Num','Mental_Health_Status_Num']
+
 df_cluster = df[cols_cluster].dropna()
 
 scaler = StandardScaler()
@@ -34,7 +37,7 @@ st.title("Média por cluster")
 cluster = df_cluster.groupby('cluster').mean()
 cluster
 
-X = df[['Age', 'Hours_Per_Week', 'Burnout_Level_Num','Work_Life_Balance_Score']]
+X = df[['Age', 'Hours_Per_Week', 'Burnout_Level_Num','Work_Life_Balance_Score','Mental_Health_Status_Num']]
 
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
@@ -49,7 +52,7 @@ df_cluster.groupby('cluster').mean()
 
 fig = px.scatter(
     df_cluster, x='Age', y='Burnout_Level_Num', color='cluster',
-    hover_data=['Hours_Per_Week', 'Work_Life_Balance_Score']
+    hover_data=['Hours_Per_Week', 'Work_Life_Balance_Score','Mental_Health_Status_Num']
 )
 fig.show()
 
